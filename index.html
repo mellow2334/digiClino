@@ -111,791 +111,802 @@ body {
   width: 40px; height: 40px; border-radius: 50%;
   border: none; background: transparent;
   color: var(--md-sys-color-on-surface-variant);
-  font-size: 18px; cursor:pointer;
+  font-size: 20px;
+  cursor:pointer;
   display:flex; align-items:center; justify-content:center;
-  transition: background .15s;
+  transition: background .2s;
 }
-.icon-btn:hover { background: var(--md-sys-color-surface-container) }
-.icon-btn.active { color: var(--md-sys-color-primary); background: var(--md-sys-color-primary-container) }
+.icon-btn:active { background: var(--md-sys-color-surface-variant) }
 
-/* ── MAIN CONTENT ── */
-.main { width:100%; max-width:480px; padding: 16px 16px 0; display:flex; flex-direction:column; gap:12px }
+/* ── MAIN CONTAINER ── */
+.container { width:100%; max-width:460px; padding:16px 20px; display:flex; flex-direction:column; gap:16px }
 
-/* ── STATUS CHIP ── */
+/* ── STATUS BAR ── */
 .status-bar {
   display:flex; align-items:center; gap:8px;
-  padding: 8px 16px; border-radius: 8px;
-  font-size:12px; font-weight:500; letter-spacing:.5px;
-  font-family: var(--font-mono);
-  background: var(--md-sys-color-surface);
-  border: 1px solid var(--md-sys-color-outline);
-  color: var(--md-sys-color-on-surface-variant);
-  transition: all .25s;
+  padding:10px 16px; border-radius:12px;
+  font-size:13px; font-weight:500;
+  border: 1px solid;
 }
-.status-bar.ok { background: var(--md-sys-color-secondary-container); border-color: transparent; color: var(--md-sys-color-secondary) }
-.status-bar.warn { background: var(--md-sys-color-tertiary-container); border-color: transparent; color: #b06000 }
-.status-bar.frozen { background: var(--md-sys-color-primary-container); border-color: transparent; color: var(--md-sys-color-primary) }
+.status-bar.ready { background:#e6f4ea; color:#188038; border-color:#81c995 }
+.status-bar.wait  { background:#fef9e0; color:#9a6f00; border-color:#fdd663 }
+.status-bar.info  { background:#e8f0fe; color:#185abc; border-color:#8ab4f8 }
+.status-bar.error { background:#fce8e6; color:#c5221f; border-color:#f28b82 }
 .status-dot {
-  width:8px; height:8px; border-radius:50%; flex-shrink:0;
-  background: var(--md-sys-color-on-surface-variant);
+  width:8px; height:8px; border-radius:50%;
+  background:currentColor; opacity:.6;
+  animation:pulse 1.5s ease-in-out infinite;
 }
-.status-bar.ok .status-dot { background: var(--md-sys-color-secondary) }
-.status-bar.warn .status-dot { background: #f9ab00; animation: pulse 1.4s infinite }
-.status-bar.frozen .status-dot { background: var(--md-sys-color-primary) }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+@keyframes pulse { 50% { opacity:.2 } }
 
-/* ── SENSOR GRANT ── */
-#grant-btn {
-  width:100%; padding:14px 16px; border-radius:12px;
-  background: var(--md-sys-color-primary-container);
-  border: 1px solid var(--md-sys-color-primary);
-  color: var(--md-sys-color-primary);
-  font-size:14px; font-weight:500; cursor:pointer;
-  display:none; font-family: var(--font-main);
-}
-
-/* ── METRIC CARDS ── */
-.metric-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px }
-.metric-card {
+/* ── MAIN READING CARD ── */
+.reading-card {
   background: var(--md-sys-color-surface);
-  border-radius: 16px;
-  padding: 16px 12px 14px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  text-align:center; position:relative; overflow:hidden;
-  transition: box-shadow .2s, border-color .2s;
+  border: 2px solid var(--md-sys-color-outline-variant);
+  border-radius:20px; padding:24px 20px;
+  box-shadow: 0 1px 3px var(--md-sys-color-shadow);
+  transition: all .3s;
+  cursor: pointer;
+  user-select: none;
 }
-.metric-card.stable {
-  border-color: transparent;
-  box-shadow: 0 1px 2px var(--md-sys-color-shadow), 0 2px 6px var(--md-sys-color-shadow);
+.reading-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 6px var(--md-sys-color-shadow);
 }
-.metric-label {
-  font-size:10px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase;
-  color: var(--md-sys-color-on-surface-variant); margin-bottom:8px;
-}
-.metric-value {
-  font-size:34px; font-weight:400; line-height:1;
-  font-family: 'Google Sans', sans-serif;
-}
-.metric-value .unit { font-size:14px; font-weight:400; color: var(--md-sys-color-on-surface-variant) }
-.metric-sub {
-  font-size:10px; color: var(--md-sys-color-on-surface-variant);
-  margin-top:6px; font-family: var(--font-mono);
-  letter-spacing:.5px; min-height:14px;
-}
-.c-blue { color: var(--md-sys-color-primary) }
-.c-green { color: var(--md-sys-color-secondary) }
-.c-amber { color: #f9ab00 }
-
-/* ── QUADRANT STRIP ── */
-.quadrant-strip {
-  background: var(--md-sys-color-surface);
-  border-radius: 12px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  padding: 12px 16px;
-  display:flex; align-items:center; justify-content:space-between;
-}
-.quadrant-label { font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color: var(--md-sys-color-on-surface-variant) }
-.quadrant-values { font-size:13px; font-weight:500; font-family: var(--font-mono) }
-.quadrant-sep { color: var(--md-sys-color-outline); margin:0 6px }
-
-/* ── STABILITY ── */
-.stability-row {
-  display:flex; align-items:center; gap:12px;
-  padding: 10px 16px;
-  background: var(--md-sys-color-surface);
-  border-radius:12px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
-.stab-label { font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color: var(--md-sys-color-on-surface-variant); white-space:nowrap; min-width:64px }
-.stab-track { flex:1; height:4px; background: var(--md-sys-color-surface-container-high); border-radius:4px; overflow:hidden }
-.stab-fill { height:100%; width:0; border-radius:4px; transition:width .2s, background .25s; background: var(--md-sys-color-primary) }
-.stab-pct { font-size:12px; color: var(--md-sys-color-on-surface-variant); font-family: var(--font-mono); min-width:36px; text-align:right }
-
-/* ── VIS CARD ── */
-.vis-card {
-  background: var(--md-sys-color-surface);
-  border-radius: 16px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  padding: 20px 16px;
-  display:flex; align-items:center; gap:0;
-}
-.vis-section { display:flex; flex-direction:column; align-items:center; gap:10px }
-.vis-label { font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color: var(--md-sys-color-on-surface-variant) }
-.vis-divider { width:1px; align-self:stretch; background: var(--md-sys-color-outline-variant); margin:0 16px; flex-shrink:0 }
-.compass-section { flex:1; display:flex; flex-direction:column; align-items:center; gap:10px }
-
-/* ── BUBBLE LEVEL ── */
-.bubble-outer {
-  width:88px; height:88px; border-radius:50%;
-  border:1px solid var(--md-sys-color-outline);
-  background: var(--md-sys-color-surface-container);
-  position:relative; overflow:hidden;
-}
-.bubble-outer::before {
-  content:''; position:absolute; left:50%; top:0; bottom:0;
-  width:1px; background: var(--md-sys-color-outline-variant); transform:translateX(-50%);
-}
-.bubble-outer::after {
-  content:''; position:absolute; top:50%; left:0; right:0;
-  height:1px; background: var(--md-sys-color-outline-variant); transform:translateY(-50%);
-}
-.level-ring {
-  position:absolute; border-radius:50%; border:1px solid var(--md-sys-color-outline-variant);
-  top:50%; left:50%; transform:translate(-50%,-50%);
-}
-#bubble {
-  position:absolute; width:18px; height:18px; border-radius:50%;
-  background: var(--md-sys-color-primary);
-  top:50%; left:50%; transform:translate(-50%,-50%);
-  transition:top .1s ease-out,left .1s ease-out;
-  z-index:1; opacity:.9;
-}
-
-/* ── DIAGRAM CARD ── */
-.diag-card {
-  background: var(--md-sys-color-surface);
-  border-radius:16px;
-  border:1px solid var(--md-sys-color-outline-variant);
-  padding:16px;
-}
-.diag-title {
-  font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase;
-  color: var(--md-sys-color-on-surface-variant); margin-bottom:12px;
-}
-canvas { border-radius:8px; background: var(--md-sys-color-surface-container); max-width:100%; display:block; margin:0 auto }
-
-/* ── ACTIONS ── */
-.actions-row { display:grid; grid-template-columns:2fr 1fr; gap:8px }
-
-#bFreeze {
-  height:52px; border-radius:26px;
-  background: var(--md-sys-color-primary);
-  border:none; color:#fff;
-  font-size:14px; font-weight:500; cursor:pointer;
-  font-family: var(--font-main);
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  transition:all .2s; letter-spacing:.25px;
-  box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 6px rgba(26,115,232,.25);
-}
-#bFreeze:active { transform:scale(0.98) }
-#bFreeze.on {
-  background: var(--md-sys-color-secondary);
-  box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 6px rgba(24,128,56,.25);
-}
-#bClear {
-  height:52px; border-radius:26px;
-  background: var(--md-sys-color-surface);
-  border: 1px solid var(--md-sys-color-outline);
+.reading-card.stable { background:#e6f4ea; border-color:#188038 }
+.reading-card.frozen { background:#e8f0fe; border-color:#1a73e8 }
+.tap-hint {
+  text-align: center;
+  font-size: 11px;
   color: var(--md-sys-color-on-surface-variant);
-  font-size:14px; font-weight:500; cursor:pointer;
-  font-family: var(--font-main);
-  transition:all .2s;
+  margin-top: 16px;
+  opacity: 0.7;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
-#bClear:hover { background: var(--md-sys-color-surface-variant) }
-#bClear:active { transform:scale(0.98) }
-
-/* ── LOG ── */
-.log-card {
-  background: var(--md-sys-color-surface);
-  border-radius:16px;
-  border:1px solid var(--md-sys-color-outline-variant);
-  overflow:hidden;
+.reading-grid {
+  display:grid; grid-template-columns: repeat(2,1fr); gap:16px;
+  margin-bottom:20px;
 }
-.log-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 16px 12px;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+.reading-item {
+  display:flex; flex-direction:column; gap:4px;
 }
-.log-header-label { font-size:14px; font-weight:500; color: var(--md-sys-color-on-surface) }
-
-
-#log { list-style:none; max-height:220px; overflow-y:auto }
-#log::-webkit-scrollbar { width:4px }
-#log::-webkit-scrollbar-thumb { background: var(--md-sys-color-outline); border-radius:2px }
-.log-item {
-  display:flex; align-items:center; gap:12px;
-  padding:12px 16px;
-  border-bottom:1px solid var(--md-sys-color-outline-variant);
-  transition:background .15s;
-}
-.log-item:last-child { border-bottom:none }
-.log-item:hover { background: var(--md-sys-color-surface-variant) }
-
-.log-index-chip {
-  width:28px; height:28px; border-radius:50%;
-  background: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-primary);
-  font-size:11px; font-weight:500;
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; font-family: var(--font-mono);
-}
-.log-data { flex:1 }
-.log-primary { font-size:13px; font-weight:500; color: var(--md-sys-color-on-surface); font-family: var(--font-mono) }
-.log-secondary { font-size:11px; color: var(--md-sys-color-on-surface-variant); margin-top:2px }
-.log-time { font-size:11px; color: var(--md-sys-color-on-surface-variant); font-family: var(--font-mono) }
-.log-empty { padding:32px 16px; text-align:center; color: var(--md-sys-color-on-surface-variant); font-size:13px }
-
-/* ── DISCLAIMER ── */
-.disclaimer {
-  background: var(--md-sys-color-tertiary-container);
-  border-radius:12px;
-  padding:12px 16px;
-  display:flex; gap:10px; align-items:flex-start;
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
-.disc-icon { font-size:16px; flex-shrink:0; margin-top:1px }
-.disc-text { font-size:12px; color: var(--md-sys-color-on-surface-variant); line-height:1.6 }
-.disc-title { font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:#b06000; margin-bottom:2px; display:block }
-
-/* ── FREEZE TOUCH OVERLAY ── */
-#freeze-touch-hint {
-  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
-  background: rgba(32,33,36,0.82); color: #e8eaed;
-  font-size: 12px; font-family: var(--font-main); font-weight: 500;
-  padding: 8px 20px; border-radius: 24px;
-  pointer-events: none; z-index: 200;
-  opacity: 0; transition: opacity .3s;
-  white-space: nowrap;
-}
-#freeze-touch-hint.show { opacity: 1 }
-/* frozen screen tint */
-body.is-frozen::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 50;
-  pointer-events: none;
-  border: 3px solid var(--md-sys-color-primary);
-  border-radius: 0;
-  box-shadow: inset 0 0 0 3px var(--md-sys-color-primary);
-}
-.debug-card {
-  background: var(--md-sys-color-surface);
-  border-radius:12px;
-  border:1px solid var(--md-sys-color-outline-variant);
-  overflow:hidden;
-}
-.debug-toggle {
-  width:100%; padding:12px 16px;
-  background:transparent; border:none;
+.reading-label {
+  font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:1.2px;
   color: var(--md-sys-color-on-surface-variant);
-  font-size:12px; font-family: var(--font-mono); letter-spacing:.5px;
-  text-align:left; cursor:pointer;
+}
+.reading-value {
+  font-size:32px; font-weight:500; font-family: var(--font-mono);
+  color: var(--md-sys-color-on-surface);
+}
+.reading-sub {
+  font-size:11px; color: var(--md-sys-color-on-surface-variant);
+  margin-top:-2px;
+}
+.stable .reading-value, .stable .reading-label { color:#188038 }
+.frozen .reading-value, .frozen .reading-label { color:#1a73e8 }
+
+/* ── DIAGRAM ── */
+.diagram-box {
+  background: var(--md-sys-color-surface-variant);
+  border-radius:16px; padding:16px; margin-top:12px;
+}
+
+/* ── STABILITY BAR ── */
+.stability-bar {
+  height:8px; border-radius:4px; overflow:hidden;
+  background: var(--md-sys-color-surface-container-high);
+  position:relative; margin-top:16px;
+}
+.stability-fill {
+  height:100%; background:#dadce0; border-radius:4px;
+  transition: width .4s, background .3s;
+}
+.stability-fill.high { background:#188038 }
+.stability-fill.med  { background:#f9ab00 }
+
+/* ── DETAILED INFO ── */
+.detail-grid {
+  display:grid; gap:12px; margin-top:16px;
+}
+.detail-row {
   display:flex; justify-content:space-between; align-items:center;
+  padding:10px 0; border-bottom:1px solid var(--md-sys-color-outline-variant);
 }
-.debug-toggle:hover { background: var(--md-sys-color-surface-variant) }
-.debug-body {
-  display:none;
-  padding:12px 16px 16px;
-  font-size:11px; font-family: var(--font-mono);
+.detail-row:last-child { border-bottom:none }
+.detail-label {
+  font-size:13px; color: var(--md-sys-color-on-surface-variant); font-weight:500;
+}
+.detail-value {
+  font-size:14px; font-family: var(--font-mono); font-weight:500;
+}
+
+/* ── READINGS LOG ── */
+.readings-section {
+  background: var(--md-sys-color-surface);
+  border-radius:20px; padding:20px;
+  box-shadow: 0 1px 3px var(--md-sys-color-shadow);
+}
+.section-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px;
+}
+.section-title {
+  font-size:16px; font-weight:500; color: var(--md-sys-color-on-surface);
+}
+.readings-list { display:flex; flex-direction:column; gap:8px }
+.readings-empty {
+  text-align:center; padding:32px 16px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size:14px; line-height:1.6;
+}
+.log-item {
+  background: var(--md-sys-color-surface-variant);
+  border-radius:12px; padding:12px 16px;
+  display:flex; align-items:center; gap:12px;
+  position:relative;
+}
+.log-number {
+  width:32px; height:32px; border-radius:50%;
+  background: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-primary);
-  line-height:2; border-top:1px solid var(--md-sys-color-outline-variant);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:13px; flex-shrink:0;
 }
-.debug-body .rt { color: var(--md-sys-color-on-surface-variant); font-size:10px }
+.log-data {
+  flex:1; display:flex; flex-direction:column; gap:4px;
+  font-family: var(--font-mono); font-size:12px;
+}
+.log-data div { line-height:1.4 }
+.log-delete {
+  width:36px; height:36px; border-radius:50%;
+  border:none; background:transparent;
+  color: var(--md-sys-color-error);
+  font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition: background .2s;
+}
+.log-delete:active { background: rgba(217,48,37,.1) }
 
-/* ── LOGO FOOTER ── */
-.logo-footer {
-  width:100%; max-width:480px;
-  display:flex; flex-direction:column; align-items:center; gap:10px;
-  padding: 24px 16px 8px;
+/* ── ACTION BUTTON ── */
+.action-btn {
+  width:100%; height:52px; border-radius:26px;
+  border:none; background: var(--md-sys-color-primary);
+  color:#fff; font-size:15px; font-weight:500; font-family: var(--font-main);
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  transition: all .2s;
+  box-shadow: 0 2px 4px var(--md-sys-color-shadow);
+  margin-top:8px;
 }
-.logo-footer img {
-  width: 72px; height: 72px;
-  border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(60,64,67,.18);
+.action-btn:active {
+  transform:scale(.97);
+  box-shadow: 0 1px 2px var(--md-sys-color-shadow);
 }
-.logo-footer-name {
-  font-size:15px; font-weight:500; color: var(--md-sys-color-primary); letter-spacing:.5px;
-}
-.logo-footer-ver {
-  font-size:11px; color: var(--md-sys-color-on-surface-variant); font-family: var(--font-mono);
+.action-btn.secondary {
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface);
 }
 
-/* ── ONBOARDING ── */
+/* ── RAW SENSOR DEBUG ── */
+.raw-section {
+  background: var(--md-sys-color-surface);
+  border-radius:20px; padding:20px;
+  box-shadow: 0 1px 3px var(--md-sys-color-shadow);
+}
+.raw-toggle {
+  display:flex; justify-content:space-between; align-items:center;
+  cursor:pointer; gap:12px;
+  padding:4px 0;
+}
+.raw-toggle span:first-child {
+  font-size:16px; font-weight:500;
+}
+.raw-body {
+  margin-top:16px; padding-top:16px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+.raw-grid {
+  display:grid; gap:12px; font-family: var(--font-mono); font-size:12px;
+}
+.raw-row {
+  display:flex; justify-content:space-between; padding:8px 0;
+  border-bottom:1px solid var(--md-sys-color-outline-variant);
+}
+.raw-row:last-child { border-bottom:none }
+
+/* ── ONBOARDING OVERLAY ── */
 #onboard {
-  position:fixed; inset:0; z-index:9999;
-  background: rgba(32,33,36,0.94);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:24px; transition:opacity .3s;
+  position:fixed; inset:0; z-index:200;
+  background: rgba(32,33,36,.95);
+  backdrop-filter: blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px;
+  opacity:1;
+  transition: opacity .3s;
 }
 #onboard.hidden { opacity:0; pointer-events:none }
-.ob-sheet {
-  width:100%; max-width:380px;
+.ob-card {
   background: var(--md-sys-color-surface);
-  border-radius:28px;
-  padding:32px 24px 24px;
-  display:flex; flex-direction:column; align-items:center; gap:16px;
+  border-radius:24px; padding:32px 24px 24px;
+  max-width:380px; width:100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
 }
-.ob-step-label { font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color: var(--md-sys-color-on-surface-variant) }
-.ob-heading { font-size:22px; font-weight:500; color: var(--md-sys-color-on-surface); text-align:center }
-.ob-anim { width:220px; height:160px; flex-shrink:0 }
-.ob-desc { font-size:14px; color: var(--md-sys-color-on-surface-variant); text-align:center; line-height:1.7; max-width:320px }
+.ob-step {
+  font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1.5px;
+  color: var(--md-sys-color-primary); margin-bottom:8px;
+}
+.ob-head {
+  font-size:22px; font-weight:500; margin-bottom:8px;
+  color: var(--md-sys-color-on-surface);
+}
+.ob-desc {
+  font-size:14px; line-height:1.6; color: var(--md-sys-color-on-surface-variant);
+  margin-bottom:16px;
+}
+.ob-svg-box {
+  background: var(--md-sys-color-surface-variant);
+  border-radius:16px; padding:20px; margin-bottom:16px;
+  height:180px; display:flex; align-items:center; justify-content:center;
+}
+.ob-svg-box svg { width:220px; height:auto }
 .ob-hint {
-  font-size:12px; color: var(--md-sys-color-primary);
-  background: var(--md-sys-color-primary-container);
-  border-radius:10px; padding:10px 16px; width:100%;
-  text-align:center; line-height:1.6; font-family: var(--font-mono);
+  background: var(--md-sys-color-tertiary-container);
+  border-left:3px solid var(--md-sys-color-tertiary);
+  padding:12px 16px; border-radius:8px;
+  font-size:12px; line-height:1.5;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom:24px;
 }
-.ob-dots { display:flex; gap:6px; align-items:center }
-.ob-dot { width:8px; height:8px; border-radius:50%; background: var(--md-sys-color-outline); transition:all .25s }
-.ob-dot.active { background: var(--md-sys-color-primary); width:24px; border-radius:4px }
-.ob-actions { display:flex; gap:8px; width:100%; margin-top:4px }
-.ob-skip {
-  flex:1; padding:12px; border-radius:24px;
-  background:transparent; border:1px solid var(--md-sys-color-outline);
-  color: var(--md-sys-color-on-surface-variant); font-size:14px; font-weight:500;
-  cursor:pointer; font-family: var(--font-main);
+.ob-dots {
+  display:flex; gap:6px; justify-content:center; margin-bottom:16px;
 }
-.ob-next {
-  flex:2; padding:12px; border-radius:24px;
-  background: var(--md-sys-color-primary); border:none;
-  color:#fff; font-size:14px; font-weight:500;
-  cursor:pointer; font-family: var(--font-main);
-  transition:opacity .15s;
+.ob-dot {
+  width:8px; height:8px; border-radius:50%;
+  background: var(--md-sys-color-outline);
+  transition: all .3s;
 }
-.ob-next:active { opacity:.85 }
+.ob-dot.active {
+  width:24px; border-radius:4px;
+  background: var(--md-sys-color-primary);
+}
 </style>
 </head>
 <body>
 
-<!-- ── LANDSCAPE BLOCKER ── -->
 <div id="landscape-block">
   <div class="rotate-icon">📱</div>
-  <h2>Please rotate your phone</h2>
-  <p>digiClino works in portrait mode only. Rotate your device to continue measuring.</p>
+  <h2>Portrait mode only</h2>
+  <p>This app is designed for portrait orientation. Please rotate your device to continue.</p>
 </div>
 
-<!-- FREEZE TOUCH HINT -->
-<div id="freeze-touch-hint">👆 Tap anywhere to freeze</div>
-
-<!-- ONBOARDING -->
-<div id="onboard">
-  <div class="ob-sheet">
-    <div class="ob-step-label" id="obStep">Step 1 of 4</div>
-    <div class="ob-heading"  id="obHead">Welcome</div>
-    <div class="ob-anim">
-      <svg id="obSvg" width="220" height="160" viewBox="0 0 220 160"></svg>
-    </div>
-    <div class="ob-desc" id="obDesc">Loading…</div>
-    <div class="ob-hint" id="obHint"></div>
-    <div class="ob-dots" id="obDots"></div>
-    <div class="ob-actions">
-      <button class="ob-skip" onclick="obClose()">Skip</button>
-      <button class="ob-next" id="obNext" onclick="obNext()">Next</button>
-    </div>
-  </div>
-</div>
-
-<!-- APP BAR -->
 <div class="app-bar">
   <div class="app-bar-leading">
-    <div class="app-icon">🧭</div>
+    <div class="app-icon">📐</div>
     <div>
       <div class="app-title">digiClino</div>
-      <div class="app-subtitle">DIP · STRIKE · DIRECTION</div>
+      <div class="app-subtitle">V1.2</div>
     </div>
   </div>
   <div class="app-actions">
     <button class="icon-btn" id="modeBtn" onclick="toggleMode()" title="Toggle theme">☀</button>
-    <button class="icon-btn" onclick="showTutorial()" title="Help">?</button>
+    <button class="icon-btn" onclick="location.reload()" title="Refresh">🔄</button>
   </div>
 </div>
 
-<div class="main">
-
-  <button id="grant-btn" onclick="grantPerm()">🔓 Tap to enable sensors (iPhone)</button>
-
-  <div class="status-bar" id="status">
+<div class="container">
+  <div id="status" class="status-bar info">
     <div class="status-dot"></div>
-    <span>Initialising…</span>
+    <span>Initializing sensors...</span>
   </div>
 
-  <div class="metric-row">
-    <div class="metric-card" id="cardD">
-      <div class="metric-label">Dip direction</div>
-      <div class="metric-value c-blue" id="vD">--<span class="unit">°</span></div>
-      <div class="metric-sub" id="sD">---</div>
-    </div>
-    <div class="metric-card" id="cardA">
-      <div class="metric-label">Dip amount</div>
-      <div class="metric-value c-green" id="vA">--<span class="unit">°</span></div>
-      <div class="metric-sub" id="sA">---</div>
-    </div>
-    <div class="metric-card" id="cardS">
-      <div class="metric-label">Strike RHR</div>
-      <div class="metric-value c-amber" id="vS">--<span class="unit">°</span></div>
-      <div class="metric-sub">Right-hand rule</div>
-    </div>
-  </div>
-
-  <div class="quadrant-strip">
-    <div class="quadrant-label">Quadrant</div>
-    <div class="quadrant-values">
-      <span class="c-blue" id="qDir">---</span><span class="quadrant-sep">/</span><span class="c-green" id="qDip">--°</span><span class="quadrant-sep">/</span><span class="c-amber" id="qStk">---</span>
-    </div>
-  </div>
-
-  <div class="stability-row">
-    <div class="stab-label">Stability</div>
-    <div class="stab-track"><div class="stab-fill" id="stabFill"></div></div>
-    <div class="stab-pct" id="stabPct">0%</div>
-  </div>
-
-  <div class="vis-card">
-    <div class="vis-section">
-      <div class="vis-label">Level</div>
-      <div class="bubble-outer">
-        <div class="level-ring" style="width:40px;height:40px"></div>
-        <div class="level-ring" style="width:64px;height:64px"></div>
-        <div id="bubble"></div>
+  <div class="reading-card" id="mainCard" onclick="toggleFreeze()">
+    <div class="reading-grid">
+      <div class="reading-item">
+        <div class="reading-label">Dip direction</div>
+        <div class="reading-value" id="dipDir">---</div>
+        <div class="reading-sub" id="dipDirLabel">Waiting...</div>
+      </div>
+      <div class="reading-item">
+        <div class="reading-label">Dip angle</div>
+        <div class="reading-value" id="dipAng">--°</div>
+        <div class="reading-sub" id="dipAngLabel">Waiting...</div>
       </div>
     </div>
-    <div class="vis-divider"></div>
-    <div class="compass-section">
-      <div class="vis-label">Compass</div>
-      <svg id="compassSvg" width="120" height="120" viewBox="0 0 130 130">
-        <circle cx="65" cy="65" r="61" fill="var(--md-sys-color-surface-container)" stroke="var(--md-sys-color-outline)" stroke-width="1"/>
-        <line x1="65" y1="5"   x2="65" y2="15"  stroke="var(--md-sys-color-outline)" stroke-width="1.5"/>
-        <line x1="65" y1="115" x2="65" y2="125" stroke="var(--md-sys-color-outline-variant)" stroke-width="1"/>
-        <line x1="5"  y1="65"  x2="15" y2="65"  stroke="var(--md-sys-color-outline-variant)" stroke-width="1"/>
-        <line x1="115" y1="65" x2="125" y2="65" stroke="var(--md-sys-color-outline-variant)" stroke-width="1"/>
-        <text x="65" y="26"  text-anchor="middle" fill="var(--md-sys-color-primary)" font-size="11" font-weight="700" font-family="Google Sans, sans-serif">N</text>
-        <text x="65" y="122" text-anchor="middle" fill="var(--md-sys-color-on-surface-variant)" font-size="9"  font-family="Roboto, sans-serif">S</text>
-        <text x="122" y="69" text-anchor="middle" fill="var(--md-sys-color-on-surface-variant)" font-size="9"  font-family="Roboto, sans-serif">E</text>
-        <text x="8"   y="69" text-anchor="middle" fill="var(--md-sys-color-on-surface-variant)" font-size="9"  font-family="Roboto, sans-serif">W</text>
-        <g id="needle" transform="rotate(0 65 65)">
-          <polygon points="65,18 62,65 68,65" fill="var(--md-sys-color-error)" opacity="0.9"/>
-          <polygon points="65,112 62,65 68,65" fill="var(--md-sys-color-outline)"/>
-          <circle cx="65" cy="65" r="5" fill="var(--md-sys-color-surface)" stroke="var(--md-sys-color-outline)" stroke-width="1.5"/>
-        </g>
-        <g id="dipArr" transform="rotate(0 65 65)">
-          <line x1="65" y1="65" x2="65" y2="32" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
-          <polygon points="65,24 62,34 68,34" fill="var(--md-sys-color-primary)"/>
-        </g>
-        <text id="headTxt" x="65" y="74" text-anchor="middle" fill="var(--md-sys-color-on-surface-variant)" font-size="9" font-family="Roboto Mono, monospace">---</text>
-      </svg>
+
+    <div class="detail-grid">
+      <div class="detail-row">
+        <span class="detail-label">Strike</span>
+        <span class="detail-value" id="strikeVal">---</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Quadrant notation</span>
+        <span class="detail-value" id="quadVal">---</span>
+      </div>
+    </div>
+
+    <div class="diagram-box">
+      <svg id="diagram" width="100%" height="200" style="display:block"></svg>
+    </div>
+
+    <div class="stability-bar">
+      <div class="stability-fill" id="stabFill"></div>
+    </div>
+    
+    <div class="tap-hint" id="tapHint">👆 Tap anywhere to freeze/unfreeze</div>
+  </div>
+
+  <button class="action-btn" id="saveBtn" onclick="saveReading()">
+    <span>💾</span>
+    <span>Save reading</span>
+  </button>
+
+  <div class="readings-section">
+    <div class="section-header">
+      <span class="section-title">Saved readings</span>
+      <button class="icon-btn" onclick="clearReadings()" title="Clear all">🗑️</button>
+    </div>
+    <div id="readingsList" class="readings-list">
+      <div class="readings-empty">
+        No readings saved yet.<br>
+        Capture your first measurement above.
+      </div>
     </div>
   </div>
 
-  <div class="diag-card">
-    <div class="diag-title">Strike &amp; Dip diagram</div>
-    <canvas id="diag" width="452" height="80"></canvas>
-  </div>
-
-  <div class="actions-row">
-    <button id="bFreeze" onclick="toggleFreeze()">❄ Freeze reading</button>
-    <button id="bClear"  onclick="clearLog()">Clear log</button>
-  </div>
-
-  <div class="log-card">
-    <div class="log-header">
-      <div class="log-header-label">Saved readings</div>
-    </div>
-    <ul id="log"><li class="log-empty">Freeze a reading to save it here.</li></ul>
-  </div>
-
-  <div class="disclaimer">
-    <div class="disc-icon">⚠</div>
-    <div class="disc-text">
-      <span class="disc-title">Disclaimer</span>
-      Estimated measurements only. Results may vary with device calibration and magnetic interference. Verify with certified instruments before professional use.
-    </div>
-  </div>
-
-  <div class="debug-card">
-    <button class="debug-toggle" id="rawToggle" onclick="toggleRaw()">
+  <div class="raw-section">
+    <div class="raw-toggle" id="rawToggle" onclick="toggleRaw()">
       <span>Sensor debug</span>
       <span style="font-size:10px;opacity:.4">▸ expand</span>
-    </button>
-    <div class="debug-body" id="rawBody">
-      <div class="rt">Raw sensor values</div>
-      <div id="rawOri">orientation: waiting…</div>
-      <div id="rawAcc">accel: waiting…</div>
-      <div id="rawHead">heading: waiting…</div>
-      <div id="rawCalc">computed: ---</div>
+    </div>
+    <div class="raw-body" id="rawBody" style="display:none">
+      <div class="raw-grid">
+        <div class="raw-row"><span>Gravity X:</span><span id="gx">--</span></div>
+        <div class="raw-row"><span>Gravity Y:</span><span id="gy">--</span></div>
+        <div class="raw-row"><span>Gravity Z:</span><span id="gz">--</span></div>
+        <div class="raw-row"><span>Mag X:</span><span id="mx">--</span></div>
+        <div class="raw-row"><span>Mag Y:</span><span id="my">--</span></div>
+        <div class="raw-row"><span>Mag Z:</span><span id="mz">--</span></div>
+        <div class="raw-row"><span>α (azimuth):</span><span id="az">--</span></div>
+        <div class="raw-row"><span>β (pitch):</span><span id="bt">--</span></div>
+        <div class="raw-row"><span>γ (roll):</span><span id="gm">--</span></div>
+      </div>
     </div>
   </div>
+</div>
 
-</div><!-- /main -->
-
-<!-- LOGO FOOTER -->
-<div class="logo-footer">
-  <img src="digiClino_logo.png" alt="digiClino logo" onerror="this.style.display='none'">
-  <div class="logo-footer-name">digiClino</div>
-  <div class="logo-footer-ver">v1.0 · Geo Clinometer App</div>
+<div id="onboard">
+  <div class="ob-card">
+    <div class="ob-step" id="obStep">Step 1 of 4</div>
+    <div class="ob-head" id="obHead">Welcome</div>
+    <div class="ob-desc" id="obDesc">Description</div>
+    <div class="ob-svg-box">
+      <svg id="obSvg" viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="ob-hint" id="obHint">Hint text</div>
+    <div class="ob-dots" id="obDots"></div>
+    <button class="action-btn" id="obNext" onclick="obNext()">Next</button>
+  </div>
 </div>
 
 <script>
-// ── PORTRAIT LOCK ─────────────────────────────────────────────────────────────
-// Strategy 1: Screen Orientation API (works in Chrome/Android WebView)
-if (screen.orientation && screen.orientation.lock) {
-  screen.orientation.lock('portrait').catch(function(){});
+// ── GLOBALS & STATE ──
+var frozen=false;
+var readings=JSON.parse(localStorage.getItem('readings')||'[]');
+var last={dd:-1,da:0,st:0};
+var stabHistory=[];
+var STAB_WINDOW=20;
+var STAB_THRESHOLD=2.5;
+
+// Enhanced low-pass filter for smoother readings
+var filteredGravity = {x: 0, y: 0, z: 0};
+var filteredMag = {x: 0, y: 0, z: 0};
+var ALPHA = 0.15; // Lower = smoother but slower response
+
+// Calibration detection
+var calibrationSamples = [];
+var isCalibrated = false;
+var CALIBRATION_SAMPLES = 30;
+var CALIBRATION_VARIANCE_THRESHOLD = 100;
+
+function checkOrientation(){
+  var isPort=window.innerHeight>window.innerWidth;
+  var block=document.getElementById('landscape-block');
+  if(!isPort){block.style.display='flex';}else{block.style.display='none';}
 }
+window.addEventListener('resize',checkOrientation);
+window.addEventListener('orientationchange',checkOrientation);
+checkOrientation();
 
-// Strategy 2: CSS + JS overlay for MIT App Inventor WebViewer
-// (WebViewer doesn't support orientation lock API, so we detect
-//  landscape via matchMedia and show a blocking overlay)
-var landscapeQuery = window.matchMedia('(orientation: landscape)');
+// ── SENSOR SETUP ──
+var grav=null,magn=null,orient=null;
+var hasGravity=false,hasMag=false,hasOrient=false;
 
-function handleOrientationChange(mq) {
-  var blocker = document.getElementById('landscape-block');
-  if (mq.matches) {
-    blocker.style.display = 'flex';
-  } else {
-    blocker.style.display = 'none';
-  }
-}
-
-// Initial check
-handleOrientationChange(landscapeQuery);
-
-// Listen for changes
-if (landscapeQuery.addEventListener) {
-  landscapeQuery.addEventListener('change', handleOrientationChange);
-} else {
-  landscapeQuery.addListener(handleOrientationChange); // Safari fallback
-}
-
-// Also listen to resize as a belt-and-suspenders backup
-window.addEventListener('resize', function() {
-  handleOrientationChange(landscapeQuery);
-});
-
-// ── REST OF APP ───────────────────────────────────────────────────────────────
-function showTutorial(){
-  var el=document.getElementById('onboard');
-  el.style.display=''; el.classList.remove('hidden');
-  obIdx=0; obRender();
-}
-
-var frozen=false, logArr=[];
-var E={alpha:0,beta:0,gamma:0,heading:0,hasOri:false,hasHeading:false,ax:0,ay:0,az:0,hasAccel:false,src:''};
-var SM={gx:0,gy:0,gz:-1,sinH:0,cosH:1};
-var A_G=0.18,A_H=0.05,A_H_STILL=0.008;
-var prev={b:0,g:0},isMoving=false,stillCnt=0,STILL_N=12;
-var dipHist=[],HIST_N=20;
-var DB_DIR=2,DB_DIP=1;
-var locked={dd:-1,da:-1,st:-1},last={dd:-1,da:-1,st:-1};
-var GBUF_SIZE=9,gBufX=[],gBufY=[],gBufZ=[];
-var HBUF_SIZE=7,hBufSin=[],hBufCos=[];
-var lastRawHeading=-1,HEAD_SPIKE_GATE=30;
-
-function median(arr){var s=arr.slice().sort(function(a,b){return a-b;});return s[Math.floor(s.length/2)];}
-function pushBuf(buf,val,maxLen){buf.push(val);if(buf.length>maxLen)buf.shift();}
-function d2r(d){return d*Math.PI/180;}
-function r2d(r){return r*180/Math.PI;}
-function angDiff(a,b){var d=Math.abs(a-b)%360;return d>180?360-d:d;}
-
-async function grantPerm(){
+if('GravitySensor' in window){
   try{
-    if(typeof DeviceMotionEvent.requestPermission==='function'){
-      var r=await DeviceMotionEvent.requestPermission();
-      if(r!=='granted'){setStatus('Motion permission denied','warn');return;}
+    grav=new GravitySensor({frequency:20});
+    grav.addEventListener('reading',onGravityReading);
+    grav.addEventListener('error',function(e){console.error('Gravity error:',e);});
+    grav.start();
+    hasGravity=true;
+  }catch(e){console.error('GravitySensor init:',e);}
+}
+
+if('Magnetometer' in window){
+  try{
+    magn=new Magnetometer({frequency:20});
+    magn.addEventListener('reading',onMagReading);
+    magn.addEventListener('error',function(e){console.error('Mag error:',e);});
+    magn.start();
+    hasMag=true;
+  }catch(e){console.error('Magnetometer init:',e);}
+}
+
+if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission==='function'){
+  DeviceOrientationEvent.requestPermission()
+    .then(function(resp){
+      if(resp==='granted'){
+        window.addEventListener('deviceorientation',onOrientFallback);
+        hasOrient=true;
+      }
+    }).catch(function(e){console.error('Orient perm:',e);});
+}else if(window.DeviceOrientationEvent){
+  window.addEventListener('deviceorientation',onOrientFallback);
+  hasOrient=true;
+}
+
+setTimeout(function(){
+  if(!hasGravity&&!hasMag&&!hasOrient){
+    setStatus('⚠ No sensors available','error');
+  }else if(!hasGravity||!hasMag){
+    setStatus('⚠ Limited sensors (some may be missing)','wait');
+  }else{
+    setStatus('🔵 Calibrating... Move phone in figure-8','info');
+  }
+},500);
+
+var rawG={x:0,y:0,z:0}, rawM={x:0,y:0,z:0}, rawO={a:0,b:0,g:0};
+
+function onGravityReading(){
+  if(!grav)return;
+  rawG.x=grav.x||0; rawG.y=grav.y||0; rawG.z=grav.z||0;
+  
+  // Apply low-pass filter
+  filteredGravity.x = ALPHA * rawG.x + (1 - ALPHA) * filteredGravity.x;
+  filteredGravity.y = ALPHA * rawG.y + (1 - ALPHA) * filteredGravity.y;
+  filteredGravity.z = ALPHA * rawG.z + (1 - ALPHA) * filteredGravity.z;
+  
+  updateRawDisplay();
+  if(!frozen)compute();
+}
+
+function onMagReading(){
+  if(!magn)return;
+  rawM.x=magn.x||0; rawM.y=magn.y||0; rawM.z=magn.z||0;
+  
+  // Apply low-pass filter
+  filteredMag.x = ALPHA * rawM.x + (1 - ALPHA) * filteredMag.x;
+  filteredMag.y = ALPHA * rawM.y + (1 - ALPHA) * filteredMag.y;
+  filteredMag.z = ALPHA * rawM.z + (1 - ALPHA) * filteredMag.z;
+  
+  // Calibration detection
+  if (!isCalibrated) {
+    calibrationSamples.push({x: rawM.x, y: rawM.y, z: rawM.z});
+    if (calibrationSamples.length >= CALIBRATION_SAMPLES) {
+      var variance = calculateMagVariance(calibrationSamples);
+      if (variance > CALIBRATION_VARIANCE_THRESHOLD) {
+        isCalibrated = true;
+        setStatus('✓ Calibrated! Hold phone against rock surface','ready');
+      }
+      calibrationSamples = calibrationSamples.slice(-10); // Keep recent samples
     }
-    if(typeof DeviceOrientationEvent.requestPermission==='function')
-      await DeviceOrientationEvent.requestPermission();
-  }catch(ex){console.warn(ex);}
-  document.getElementById('grant-btn').style.display='none';
-  startSensors();
-}
-
-window.addEventListener('load',function(){
-  var needs=typeof DeviceMotionEvent!=='undefined'&&typeof DeviceMotionEvent.requestPermission==='function';
-  if(needs){document.getElementById('grant-btn').style.display='block';setStatus('Tap "Enable Sensors" to start','warn');}
-  else startSensors();
-});
-
-function startSensors(){
-  var gotAbs=false;
-  window.addEventListener('devicemotion',function(e){
-    var g=e.accelerationIncludingGravity;
-    if(!g||g.x==null) return;
-    E.ax=g.x;E.ay=g.y;E.az=g.z;E.hasAccel=true;
-    document.getElementById('rawAcc').textContent='accel: x='+g.x.toFixed(2)+' y='+g.y.toFixed(2)+' z='+g.z.toFixed(2);
-  },true);
-
-  function onOri(e,isAbs){
-    if(e.alpha==null||e.beta==null||e.gamma==null) return;
-    E.alpha=e.alpha;E.beta=e.beta;E.gamma=e.gamma;E.hasOri=true;
-    var h;
-    if(typeof e.webkitCompassHeading==='number'){h=e.webkitCompassHeading;E.src='iOS';}
-    else if(isAbs){h=(360-e.alpha+360)%360;E.src='Android-abs';}
-    else{h=(360-e.alpha+360)%360;E.src='Android-rel';}
-    E.heading=h;E.hasHeading=true;
-    document.getElementById('rawOri').textContent='α='+e.alpha.toFixed(1)+'° β='+e.beta.toFixed(1)+'° γ='+e.gamma.toFixed(1)+'°';
-    document.getElementById('rawHead').textContent='heading='+h.toFixed(1)+'° ['+E.src+']';
-    var db=Math.abs(E.beta-prev.b),dg=Math.abs(E.gamma-prev.g);
-    prev.b=E.beta;prev.g=E.gamma;
-    if(Math.sqrt(db*db+dg*dg)>0.4){isMoving=true;stillCnt=0;}
-    else{stillCnt++;if(stillCnt>=STILL_N)isMoving=false;}
-    var b=d2r(E.beta),g2=d2r(E.gamma);
-    var gx_dev=Math.sin(g2),gy_dev=-Math.sin(b)*Math.cos(g2),gz_dev=-Math.cos(b)*Math.cos(g2);
-    var mag=Math.sqrt(gx_dev*gx_dev+gy_dev*gy_dev+gz_dev*gz_dev);
-    if(mag>0.01){gx_dev/=mag;gy_dev/=mag;gz_dev/=mag;}
-    var hAccepted=h;
-    if(!isMoving&&lastRawHeading>=0){var hJump=Math.abs(h-lastRawHeading);if(hJump>180)hJump=360-hJump;if(hJump>HEAD_SPIKE_GATE)hAccepted=lastRawHeading;}
-    lastRawHeading=h;
-    pushBuf(gBufX,gx_dev,GBUF_SIZE);pushBuf(gBufY,gy_dev,GBUF_SIZE);pushBuf(gBufZ,gz_dev,GBUF_SIZE);
-    var mgx=gBufX.length>=3?median(gBufX):gx_dev,mgy=gBufY.length>=3?median(gBufY):gy_dev,mgz=gBufZ.length>=3?median(gBufZ):gz_dev;
-    var aG=isMoving?A_G:0.04;
-    SM.gx=aG*mgx+(1-aG)*SM.gx;SM.gy=aG*mgy+(1-aG)*SM.gy;SM.gz=aG*mgz+(1-aG)*SM.gz;
-    var hR=d2r(hAccepted);
-    pushBuf(hBufSin,Math.sin(hR),HBUF_SIZE);pushBuf(hBufCos,Math.cos(hR),HBUF_SIZE);
-    var mSinH=hBufSin.length>=3?median(hBufSin):Math.sin(hR),mCosH=hBufCos.length>=3?median(hBufCos):Math.cos(hR);
-    var aH=isMoving?A_H:A_H_STILL;
-    SM.sinH=aH*mSinH+(1-aH)*SM.sinH;SM.cosH=aH*mCosH+(1-aH)*SM.cosH;
-    if(!frozen) render();
   }
-  window.addEventListener('deviceorientationabsolute',function(e){gotAbs=true;onOri(e,true);},true);
-  window.addEventListener('deviceorientation',function(e){if(!gotAbs)onOri(e,false);},true);
-  setStatus('Waiting for sensors…','warn');
+  
+  updateRawDisplay();
+  if(!frozen)compute();
 }
 
+function calculateMagVariance(samples) {
+  var meanX = 0, meanY = 0, meanZ = 0;
+  samples.forEach(function(s) {
+    meanX += s.x; meanY += s.y; meanZ += s.z;
+  });
+  meanX /= samples.length;
+  meanY /= samples.length;
+  meanZ /= samples.length;
+  
+  var variance = 0;
+  samples.forEach(function(s) {
+    variance += Math.pow(s.x - meanX, 2) + Math.pow(s.y - meanY, 2) + Math.pow(s.z - meanZ, 2);
+  });
+  return variance / samples.length;
+}
+
+function onOrientFallback(e){
+  rawO.a=e.alpha||0; rawO.b=e.beta||0; rawO.g=e.gamma||0;
+  updateRawDisplay();
+}
+
+function updateRawDisplay(){
+  document.getElementById('gx').textContent=rawG.x.toFixed(2);
+  document.getElementById('gy').textContent=rawG.y.toFixed(2);
+  document.getElementById('gz').textContent=rawG.z.toFixed(2);
+  document.getElementById('mx').textContent=rawM.x.toFixed(1);
+  document.getElementById('my').textContent=rawM.y.toFixed(1);
+  document.getElementById('mz').textContent=rawM.z.toFixed(1);
+  document.getElementById('az').textContent=rawO.a.toFixed(1)+'°';
+  document.getElementById('bt').textContent=rawO.b.toFixed(1)+'°';
+  document.getElementById('gm').textContent=rawO.g.toFixed(1)+'°';
+}
+
+// ── COMPUTATION ──
 function compute(){
-  var mag=Math.sqrt(SM.gx*SM.gx+SM.gy*SM.gy+SM.gz*SM.gz);
-  if(mag<0.1) return null;
-  var gx=SM.gx/mag,gy=SM.gy/mag,gz=SM.gz/mag;
-  var horiz=Math.sqrt(gx*gx+gy*gy);
-  var dipAmt=r2d(Math.atan2(horiz,Math.abs(gz)));
-  var smH=(r2d(Math.atan2(SM.sinH,SM.cosH))+360)%360;
-  var dipInPhone=r2d(Math.atan2(gx,gy));
-  if(gz>0) dipInPhone=r2d(Math.atan2(-gx,gy));
-  var dipDir=(smH+dipInPhone+360)%360;
-  var strike=(dipDir-90+360)%360;
-  document.getElementById('rawCalc').textContent='gDev=('+gx.toFixed(2)+','+gy.toFixed(2)+','+gz.toFixed(2)+') smH='+smH.toFixed(1)+'° dir='+dipDir.toFixed(1)+'° dip='+dipAmt.toFixed(1)+'°';
-  dipHist.push({dd:dipDir,da:dipAmt});
-  if(dipHist.length>HIST_N) dipHist.shift();
-  var sx=0,sy=0;
-  dipHist.forEach(function(p){sx+=Math.sin(d2r(p.dd));sy+=Math.cos(d2r(p.dd));});
-  var Rv=Math.sqrt(sx*sx+sy*sy)/dipHist.length;
-  var meanDa=dipHist.reduce(function(s,p){return s+p.da;},0)/dipHist.length;
-  var varDa=dipHist.reduce(function(s,p){return s+(p.da-meanDa)*(p.da-meanDa);},0)/dipHist.length;
-  var sdDa=Math.sqrt(varDa);
-  var confDir=Math.max(0,Math.min(1,(Rv-0.55)/0.45));
-  var confDip=Math.max(0,Math.min(1,1-sdDa/4));
-  var conf=confDir*0.6+confDip*0.4;
-  var stable=conf>0.75&&!isMoving&&dipHist.length>=HIST_N&&sdDa<3.0;
-  var sortedDir=dipHist.map(function(p){return p.dd;}).slice().sort(function(a,b){return a-b;});
-  var sortedAmt=dipHist.map(function(p){return p.da;}).slice().sort(function(a,b){return a-b;});
-  var bestDipDir=stable?sortedDir[Math.floor(sortedDir.length/2)]:dipDir;
-  var bestDipAmt=stable?sortedAmt[Math.floor(sortedAmt.length/2)]:dipAmt;
-  var bestStrike=stable?(bestDipDir-90+360)%360:strike;
-  return{dipAmt:bestDipAmt,dipDir:bestDipDir,strike:bestStrike,rawDipDir:dipDir,rawDipAmt:dipAmt,stable,conf,smH,gx,gy,gz,sdDa:sdDa.toFixed(1),Rv:Rv.toFixed(2)};
+  // Use filtered values instead of raw
+  var gx=filteredGravity.x, gy=filteredGravity.y, gz=filteredGravity.z;
+  var mx=filteredMag.x, my=filteredMag.y, mz=filteredMag.z;
+  
+  var gmag=Math.sqrt(gx*gx+gy*gy+gz*gz);
+  if(gmag<0.1){
+    setStatus('⚠ Unable to read gravity vector','error');
+    return;
+  }
+  var gxn=gx/gmag, gyn=gy/gmag, gzn=gz/gmag;
+
+  var mmag=Math.sqrt(mx*mx+my*my+mz*mz);
+  if(mmag<1){
+    if (!isCalibrated) {
+      setStatus('🔵 Calibrating... Move phone in figure-8','info');
+    } else {
+      setStatus('⚠ Weak magnetic field - calibrate or move away from metal','wait');
+    }
+    return;
+  }
+  var mxn=mx/mmag, myn=my/mmag, mzn=mz/mmag;
+
+  var dipDeg=Math.acos(-gzn)*180/Math.PI;
+  if(dipDeg>90)dipDeg=180-dipDeg;
+
+  var Ex=myn*gzn-mzn*gyn;
+  var Ey=mzn*gxn-mxn*gzn;
+  var Ez=mxn*gyn-myn*gxn;
+  var eastMag=Math.sqrt(Ex*Ex+Ey*Ey+Ez*Ez);
+  if(eastMag<0.01){
+    setStatus('⚠ Cannot determine direction','error');
+    return;
+  }
+  Ex/=eastMag; Ey/=eastMag; Ez/=eastMag;
+
+  var Nx=Ey*gzn-Ez*gyn;
+  var Ny=Ez*gxn-Ex*gzn;
+  var Nz=Ex*gyn-Ey*gxn;
+  var northMag=Math.sqrt(Nx*Nx+Ny*Ny+Nz*Nz);
+  if(northMag<0.01){
+    setStatus('⚠ Cannot compute north','error');
+    return;
+  }
+  Nx/=northMag; Ny/=northMag; Nz/=northMag;
+
+  var dipAz=Math.atan2(Ey*gxn+Ey*gyn+Ez*gzn, Nx*gxn+Ny*gyn+Nz*gzn)*180/Math.PI;
+  if(dipAz<0)dipAz+=360;
+
+  var strikeDeg=(dipAz+270)%360;
+
+  // Enhanced stability check with tighter threshold
+  stabHistory.push(dipDeg);
+  if(stabHistory.length>STAB_WINDOW)stabHistory.shift();
+  
+  var isStable = false;
+  if(stabHistory.length>=STAB_WINDOW){
+    var avg=stabHistory.reduce(function(a,b){return a+b;},0)/stabHistory.length;
+    var variance=stabHistory.reduce(function(sum,v){return sum+Math.pow(v-avg,2);},0)/stabHistory.length;
+    var stdDev=Math.sqrt(variance);
+    isStable = stdDev < STAB_THRESHOLD;
+  }
+
+  last={dd:Math.round(dipAz),da:Math.round(dipDeg),st:Math.round(strikeDeg)};
+
+  var card=document.getElementById('mainCard');
+  if(isStable){
+    card.classList.add('stable');
+    card.classList.remove('frozen');
+    setStatus('✓ Stable reading — tap to freeze','ready');
+  }else{
+    card.classList.remove('stable','frozen');
+    if (isCalibrated) {
+      setStatus('⏳ Hold still for stable reading...','wait');
+    }
+  }
+
+  document.getElementById('dipDir').textContent=last.dd+'°';
+  document.getElementById('dipDirLabel').textContent=compass16(last.dd);
+  document.getElementById('dipAng').textContent=last.da+'°';
+  document.getElementById('dipAngLabel').textContent=dipLabel(last.da);
+  document.getElementById('strikeVal').textContent=last.st+'°';
+  updateQuadrant(last.dd,last.da,last.st);
+
+  var stabPct=Math.min(100, (stabHistory.length/STAB_WINDOW)*100);
+  var fill=document.getElementById('stabFill');
+  fill.style.width=stabPct+'%';
+  if(isStable){
+    fill.classList.add('high');
+    fill.classList.remove('med');
+  }else if(stabPct>50){
+    fill.classList.add('med');
+    fill.classList.remove('high');
+  }else{
+    fill.classList.remove('high','med');
+  }
+
+  drawDiagram(last.st,last.dd,last.da);
 }
 
-function render(){
-  if(!E.hasOri||!E.hasHeading){setStatus('Waiting for sensors…','warn');return;}
-  var r=compute();
-  if(!r){setStatus('Calibrating…','warn');return;}
-  var sp=Math.round(r.conf*100);
-  var sf=document.getElementById('stabFill');
-  sf.style.width=sp+'%';
-  var spEl=document.getElementById('stabPct');if(spEl)spEl.textContent=sp+'%';
-  if(r.stable) sf.style.background='var(--md-sys-color-secondary)';
-  else if(sp>50) sf.style.background='var(--md-sys-color-tertiary)';
-  else sf.style.background='var(--md-sys-color-error)';
-  setStatus(
-    r.stable?'✓ Stable — ready to measure':isMoving?'⚠ Moving — hold still':'◎ Stabilising…',
-    r.stable?'ok':'warn');
-  var dd=Math.round(r.dipDir),da=Math.round(r.dipAmt),st=Math.round(r.strike);
-  var sDD,sDA,sST;
-  if(!isMoving&&locked.dd>=0){
-    if(angDiff(dd,locked.dd)>DB_DIR){locked.dd=dd;locked.da=da;locked.st=st;}
-    else if(Math.abs(da-locked.da)>DB_DIP){locked.da=da;locked.st=st;}
-    sDD=locked.dd;sDA=locked.da;sST=locked.st;
-  } else {
-    locked.dd=dd;locked.da=da;locked.st=st;sDD=dd;sDA=da;sST=st;
-  }
-  if(sDD!==last.dd){
-    document.getElementById('vD').innerHTML=sDD+'<span class="unit">°</span>';
-    document.getElementById('sD').textContent=compass16(sDD);
-    document.getElementById('dipArr').setAttribute('transform','rotate('+sDD+' 65 65)');
-    document.getElementById('headTxt').textContent=sDD+'°';
-    last.dd=sDD;
-  }
-  if(sDA!==last.da){
-    document.getElementById('vA').innerHTML=sDA+'<span class="unit">°</span>';
-    document.getElementById('sA').textContent=dipLabel(sDA);
-    last.da=sDA;
-  }
-  if(sST!==last.st){
-    document.getElementById('vS').innerHTML=sST+'<span class="unit">°</span>';
-    last.st=sST;
-  }
-  updateQuadrant(sDD,sDA,sST);
-  document.getElementById('needle').setAttribute('transform','rotate('+(-r.smH)+' 65 65)');
-  var BR=34,bx=-r.gx*BR,by=-r.gy*BR,bd=Math.sqrt(bx*bx+by*by);
-  if(bd>BR){bx=bx/bd*BR;by=by/bd*BR;}
-  document.getElementById('bubble').style.left=(50+bx*0.85)+'%';
-  document.getElementById('bubble').style.top=(50+by*0.85)+'%';
-  ['cardD','cardA','cardS'].forEach(function(id){document.getElementById(id).classList.toggle('stable',r.stable);});
-  drawDiagram(sST,sDD,sDA);
-}
-
-function getCSSVar(v){return getComputedStyle(document.body).getPropertyValue(v).trim();}
-function drawDiagram(strike,dipDir,dipAmt){
-  var c=document.getElementById('diag');
-  var ctx=c.getContext('2d');
-  var W=c.width,H=c.height,cx=W/2,cy=H/2;
-  var cSurface=getCSSVar('--md-sys-color-surface-container');
-  var cOutline=getCSSVar('--md-sys-color-outline-variant');
-  var cPrimary=getCSSVar('--md-sys-color-primary');
-  var cSecondary=getCSSVar('--md-sys-color-secondary');
-  var cAmber=getCSSVar('--md-sys-color-tertiary');
-  var cText=getCSSVar('--md-sys-color-on-surface-variant');
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle=cSurface;ctx.fillRect(0,0,W,H);
-  for(var gx2=20;gx2<W;gx2+=20) for(var gy2=8;gy2<H;gy2+=16){ctx.fillStyle=cOutline;ctx.beginPath();ctx.arc(gx2,gy2,.8,0,Math.PI*2);ctx.fill();}
-  var sRad=d2r(strike-90),dRad=d2r(dipDir-90);
-  var L=Math.min(cx,cy)-6,AL=28;
-  ctx.strokeStyle=cAmber;ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(cx-Math.cos(sRad)*L,cy-Math.sin(sRad)*L);ctx.lineTo(cx+Math.cos(sRad)*L,cy+Math.sin(sRad)*L);ctx.stroke();
-  for(var t=-L+12;t<=L-12;t+=16){
-    var px=cx+Math.cos(sRad)*t,py=cy+Math.sin(sRad)*t;
-    var tnx=Math.cos(sRad+Math.PI/2)*6,tny=Math.sin(sRad+Math.PI/2)*6;
-    ctx.strokeStyle=cText;ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(px-tnx,py-tny);ctx.lineTo(px+tnx,py+tny);ctx.stroke();
-  }
-  var ex=cx+Math.cos(dRad)*AL,ey=cy+Math.sin(dRad)*AL;
-  ctx.strokeStyle=cPrimary;ctx.fillStyle=cPrimary;ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ex,ey);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-Math.cos(dRad-0.42)*11,ey-Math.sin(dRad-0.42)*11);ctx.lineTo(ex-Math.cos(dRad+0.42)*11,ey-Math.sin(dRad+0.42)*11);ctx.closePath();ctx.fill();
-  ctx.font='bold 11px Roboto Mono, monospace';ctx.fillStyle=cSecondary;ctx.textAlign='center';
-  var lx=cx+Math.cos(dRad)*16,ly=cy+Math.sin(dRad)*16;
-  ctx.fillText(dipAmt+'°',lx+Math.cos(dRad+Math.PI/2)*14,ly+Math.sin(dRad+Math.PI/2)*14);
-  ctx.font='10px Roboto Mono, monospace';ctx.textAlign='left';
-  ctx.fillStyle=cText;ctx.fillText('S:'+strike+'°',6,12);
-  ctx.fillStyle=cPrimary;ctx.fillText('N↑',6,H-4);
-}
-
+// ── TAP TO FREEZE/UNFREEZE ──
 function toggleFreeze(){
-  var btn=document.getElementById('bFreeze');
-  if(!frozen){
-    frozen=true;btn.textContent='▶ Unfreeze';btn.classList.add('on');
-    setStatus('❄ Frozen — tap anywhere to unfreeze','frozen');
-    if(locked.dd>=0)logArr.unshift({dir:locked.dd,dip:locked.da,str:locked.st,time:new Date().toTimeString().slice(0,8)});
-    renderLog();
-  } else {
-    frozen=false;btn.textContent='❄ Freeze reading';btn.classList.remove('on');
-    last.dd=last.da=last.st=-1;
-    setStatus('Live','ok');
+  frozen=!frozen;
+  var card=document.getElementById('mainCard');
+  var hint=document.getElementById('tapHint');
+  
+  if(frozen){
+    card.classList.add('frozen');
+    card.classList.remove('stable');
+    setStatus('❄ Reading frozen — tap to unfreeze','info');
+    hint.textContent='❄ Frozen — tap to unfreeze';
+    document.getElementById('saveBtn').style.display='flex';
+  }else{
+    card.classList.remove('frozen');
+    setStatus('✓ Unfrozen — hold still for stable reading','ready');
+    hint.textContent='👆 Tap anywhere to freeze/unfreeze';
+    stabHistory=[];
   }
 }
-function renderLog(){
-  var ul=document.getElementById('log');ul.innerHTML='';
-  if(!logArr.length){ul.innerHTML='<li class="log-empty">Freeze a reading to save it here.</li>';return;}
-  logArr.forEach(function(r,i){
-    var li=document.createElement('li');li.className='log-item';
-    li.innerHTML=
-      '<div class="log-index-chip">'+(logArr.length-i)+'</div>'+
+
+// ── DIAGRAM DRAWING ──
+function drawDiagram(strike,dipDir,dipAng){
+  var svg=document.getElementById('diagram');
+  svg.innerHTML='';
+  var ns='http://www.w3.org/2000/svg';
+  var w=svg.clientWidth||400, h=200;
+  svg.setAttribute('viewBox','0 0 '+w+' '+h);
+
+  var bg=document.createElementNS(ns,'rect');
+  bg.setAttribute('width',w);bg.setAttribute('height',h);
+  bg.setAttribute('fill','var(--md-sys-color-surface-variant)');
+  svg.appendChild(bg);
+
+  if(dipDir<0)return;
+
+  var cx=w/2, cy=h/2, r=Math.min(w,h)*0.35;
+
+  var circ=document.createElementNS(ns,'circle');
+  circ.setAttribute('cx',cx);circ.setAttribute('cy',cy);circ.setAttribute('r',r);
+  circ.setAttribute('fill','none');circ.setAttribute('stroke','var(--md-sys-color-outline)');
+  circ.setAttribute('stroke-width','2');
+  svg.appendChild(circ);
+
+  var isDark=!isLight;
+  var colorStrike=isDark?'#8ab4f8':'#1a73e8';
+  var colorDip=isDark?'#81c995':'#188038';
+
+  function drawLine(ang,col,label,width){
+    var rad=ang*Math.PI/180;
+    var x1=cx+r*Math.cos(rad), y1=cy+r*Math.sin(rad);
+    var x2=cx-r*Math.cos(rad), y2=cy-r*Math.sin(rad);
+    var line=document.createElementNS(ns,'line');
+    line.setAttribute('x1',x1);line.setAttribute('y1',y1);
+    line.setAttribute('x2',x2);line.setAttribute('y2',y2);
+    line.setAttribute('stroke',col);line.setAttribute('stroke-width',width||3);
+    svg.appendChild(line);
+    if(label){
+      var tx=cx+(r+20)*Math.cos(rad), ty=cy+(r+20)*Math.sin(rad);
+      var txt=document.createElementNS(ns,'text');
+      txt.setAttribute('x',tx);txt.setAttribute('y',ty);
+      txt.setAttribute('text-anchor','middle');txt.setAttribute('dominant-baseline','middle');
+      txt.setAttribute('fill',col);txt.setAttribute('font-size','12');
+      txt.setAttribute('font-weight','700');txt.textContent=label;
+      svg.appendChild(txt);
+    }
+  }
+
+  var strikeRad=(strike-90)*Math.PI/180;
+  drawLine(strike-90,colorStrike,'S',3);
+
+  var dipRad=(dipDir-90)*Math.PI/180;
+  var dipLen=r*0.7;
+  var dx=cx+dipLen*Math.cos(dipRad), dy=cy+dipLen*Math.sin(dipRad);
+  var arr=document.createElementNS(ns,'line');
+  arr.setAttribute('x1',cx);arr.setAttribute('y1',cy);
+  arr.setAttribute('x2',dx);arr.setAttribute('y2',dy);
+  arr.setAttribute('stroke',colorDip);arr.setAttribute('stroke-width','4');
+  arr.setAttribute('marker-end','url(#arrowDip)');
+  svg.appendChild(arr);
+
+  var defs=document.createElementNS(ns,'defs');
+  var marker=document.createElementNS(ns,'marker');
+  marker.setAttribute('id','arrowDip');marker.setAttribute('markerWidth','10');
+  marker.setAttribute('markerHeight','10');marker.setAttribute('refX','5');
+  marker.setAttribute('refY','5');marker.setAttribute('orient','auto');
+  var poly=document.createElementNS(ns,'polygon');
+  poly.setAttribute('points','0,0 10,5 0,10');poly.setAttribute('fill',colorDip);
+  marker.appendChild(poly);defs.appendChild(marker);svg.appendChild(defs);
+
+  var dtxt=document.createElementNS(ns,'text');
+  var dtx=cx+(r+25)*Math.cos(dipRad), dty=cy+(r+25)*Math.sin(dipRad);
+  dtxt.setAttribute('x',dtx);dtxt.setAttribute('y',dty);
+  dtxt.setAttribute('text-anchor','middle');dtxt.setAttribute('dominant-baseline','middle');
+  dtxt.setAttribute('fill',colorDip);dtxt.setAttribute('font-size','12');
+  dtxt.setAttribute('font-weight','700');dtxt.textContent='D '+dipAng+'°';
+  svg.appendChild(dtxt);
+}
+
+// ── SAVE / READINGS ──
+function saveReading(){
+  if(last.dd<0){
+    alert('No valid reading to save.');
+    return;
+  }
+  var ts=new Date().toLocaleString();
+  readings.unshift({
+    timestamp:ts,
+    dipDir:last.dd,
+    dipAng:last.da,
+    strike:last.st,
+    quad:strikeQuadrant(last.st)
+  });
+  localStorage.setItem('readings',JSON.stringify(readings));
+  renderReadings();
+  
+  // Visual feedback
+  var btn = document.getElementById('saveBtn');
+  var originalText = btn.innerHTML;
+  btn.innerHTML = '<span>✓</span><span>Saved!</span>';
+  btn.style.background = 'var(--md-sys-color-secondary)';
+  setTimeout(function(){
+    btn.innerHTML = originalText;
+    btn.style.background = 'var(--md-sys-color-primary)';
+  }, 1500);
+}
+
+function renderReadings(){
+  var list=document.getElementById('readingsList');
+  if(readings.length===0){
+    list.innerHTML='<div class="readings-empty">No readings saved yet.<br>Capture your first measurement above.</div>';
+    return;
+  }
+  list.innerHTML='';
+  readings.forEach(function(r,i){
+    var item=document.createElement('div');
+    item.className='log-item';
+    item.innerHTML=
+      '<div class="log-number">'+(readings.length-i)+'</div>'+
       '<div class="log-data">'+
-        '<div class="log-primary">'+r.dir+'° / '+r.dip+'° / '+r.str+'°</div>'+
-        '<div class="log-secondary">Dir &middot; Dip &middot; Strike</div>'+
+        '<div>Dir: '+r.dipDir+'° ('+compass16(r.dipDir)+') — Dip: '+r.dipAng+'°</div>'+
+        '<div>Strike: '+r.strike+'° — Quad: '+r.quad+'</div>'+
+        '<div style="opacity:.6">'+r.timestamp+'</div>'+
       '</div>'+
-      '<div class="log-time">'+r.time+'</div>';
-    ul.appendChild(li);
+      '<button class="log-delete" onclick="deleteReading('+i+')">×</button>';
+    list.appendChild(item);
   });
 }
-function clearLog(){logArr=[];renderLog();}
 
+function deleteReading(idx){
+  if(confirm('Delete this reading?')){
+    readings.splice(idx,1);
+    localStorage.setItem('readings',JSON.stringify(readings));
+    renderReadings();
+  }
+}
+
+function clearReadings(){
+  if(readings.length===0)return;
+  if(confirm('Clear all '+readings.length+' saved readings?')){
+    readings=[];
+    localStorage.removeItem('readings');
+    renderReadings();
+  }
+}
+
+window.addEventListener('load',function(){renderReadings();});
+
+// ── HELPERS ──
 function setStatus(m,c){
   var e=document.getElementById('status');
   e.innerHTML='<div class="status-dot"></div><span>'+m+'</span>';
@@ -934,19 +945,17 @@ function strikeQuadrant(strikeDeg){
   return toQuadrant(a)+' — '+toQuadrant(b);
 }
 function updateQuadrant(dd,da,st){
-  if(dd<0){document.getElementById('qDir').textContent='---';document.getElementById('qDip').textContent='--°';document.getElementById('qStk').textContent='---';return;}
-  document.getElementById('qDir').textContent=toQuadrant(dd);
-  document.getElementById('qDip').textContent=da+'°';
-  document.getElementById('qStk').textContent=strikeQuadrant(st);
+  if(dd<0){document.getElementById('quadVal').textContent='---';return;}
+  document.getElementById('quadVal').textContent=strikeQuadrant(st);
 }
 
 // ── ONBOARDING ──
 var obIdx=0;
 var OB_SLIDES=[
   {step:'Step 1 of 4',head:'Calibrate first',desc:'Before measuring, move the phone in a figure-8 pattern to calibrate your compass. This eliminates magnetic interference.',hint:'⚠ Always calibrate when you open the app or move to a new location.',draw:obDrawFig8},
-  {step:'Step 2 of 4',head:'Place on rock surface',desc:'Place the back of the phone flat against the rock plane you want to measure. Works in portrait or landscape.',hint:'📱 Hold portrait — the app locks to portrait mode.',draw:obDrawPlacement},
+  {step:'Step 2 of 4',head:'Place on rock surface',desc:'Place the back of the phone flat against the rock plane you want to measure. Works in portrait mode.',hint:'📱 App locks to portrait for best accuracy.',draw:obDrawPlacement},
   {step:'Step 3 of 4',head:'Wait for stable reading',desc:'Hold still and watch the stability bar fill green. The reading locks automatically when stable.',hint:'✓ Green cards mean the reading is reliable.',draw:obDrawStable},
-  {step:'Step 4 of 4',head:'Freeze & save',desc:'Tap Freeze to capture and save the reading. Use Export CSV to share your measurements.',hint:'💡 Stay away from metal objects and power lines for best accuracy.',draw:obDrawFreeze}
+  {step:'Step 4 of 4',head:'Tap to freeze & save',desc:'Simply tap anywhere on the reading card to freeze it. Tap again to unfreeze and take new measurements.',hint:'💡 Stay away from metal objects and power lines for best accuracy.',draw:obDrawFreeze}
 ];
 function obRender(){
   var s=OB_SLIDES[obIdx];
@@ -994,15 +1003,16 @@ function obDrawStable(svg){
 }
 function obDrawFreeze(svg){
   var ns='http://www.w3.org/2000/svg';
-  [[30,18,160,24],[30,48,160,24],[30,78,140,24]].forEach(function(r,i){
-    var rect=document.createElementNS(ns,'rect');rect.setAttribute('x',r[0]);rect.setAttribute('y',r[1]);rect.setAttribute('width',r[2]);rect.setAttribute('height',r[3]);rect.setAttribute('rx','6');rect.setAttribute('fill','#f1f3f4');rect.setAttribute('stroke','#dadce0');rect.setAttribute('stroke-width','1');svg.appendChild(rect);
-    var t=document.createElementNS(ns,'text');t.setAttribute('x','42');t.setAttribute('y',r[1]+16);t.setAttribute('fill','#5f6368');t.setAttribute('font-size','9');t.setAttribute('font-family','Roboto Mono, monospace');t.textContent='#'+(3-i)+' Dir:145° Dip:32° S:055°';svg.appendChild(t);
+  var card=document.createElementNS(ns,'rect');card.setAttribute('x','20');card.setAttribute('y','15');card.setAttribute('width','180');card.setAttribute('height','60');card.setAttribute('rx','12');card.setAttribute('fill','#e8f0fe');card.setAttribute('stroke','#1a73e8');card.setAttribute('stroke-width','2');svg.appendChild(card);
+  var tap=document.createElementNS(ns,'text');tap.setAttribute('x','110');tap.setAttribute('y','35');tap.setAttribute('text-anchor','middle');tap.setAttribute('fill','#1a73e8');tap.setAttribute('font-size','24');tap.textContent='👆';svg.appendChild(tap);
+  var t1=document.createElementNS(ns,'text');t1.setAttribute('x','110');t1.setAttribute('y','55');t1.setAttribute('text-anchor','middle');t1.setAttribute('fill','#1a73e8');t1.setAttribute('font-size','12');t1.setAttribute('font-weight','500');t1.setAttribute('font-family','Google Sans, sans-serif');t1.textContent='Tap to freeze';svg.appendChild(t1);
+  var t2=document.createElementNS(ns,'text');t2.setAttribute('x','110');t2.setAttribute('y','69');t2.setAttribute('text-anchor','middle');t2.setAttribute('fill','#5f6368');t2.setAttribute('font-size','9');t2.setAttribute('font-family','Roboto, sans-serif');t2.textContent='Tap again to unfreeze';svg.appendChild(t2);
+  
+  [[30,88,160,18],[30,112,160,18],[30,136,140,18]].forEach(function(r,i){
+    var rect=document.createElementNS(ns,'rect');rect.setAttribute('x',r[0]);rect.setAttribute('y',r[1]);rect.setAttribute('width',r[2]);rect.setAttribute('height',r[3]);rect.setAttribute('rx','4');rect.setAttribute('fill','#f1f3f4');rect.setAttribute('stroke','#dadce0');rect.setAttribute('stroke-width','1');svg.appendChild(rect);
+    var t=document.createElementNS(ns,'text');t.setAttribute('x','35');t.setAttribute('y',r[1]+12);t.setAttribute('fill','#5f6368');t.setAttribute('font-size','8');t.setAttribute('font-family','Roboto Mono, monospace');t.textContent='#'+(3-i)+' Dir:145° Dip:32°';svg.appendChild(t);
   });
-  var btn=document.createElementNS(ns,'rect');btn.setAttribute('x','30');btn.setAttribute('y','112');btn.setAttribute('width','160');btn.setAttribute('height','36');btn.setAttribute('rx','18');btn.setAttribute('fill','#1a73e8');svg.appendChild(btn);
-  var btxt=document.createElementNS(ns,'text');btxt.setAttribute('x','110');btxt.setAttribute('y','135');btxt.setAttribute('text-anchor','middle');btxt.setAttribute('fill','#fff');btxt.setAttribute('font-size','13');btxt.setAttribute('font-weight','500');btxt.setAttribute('font-family','Google Sans, sans-serif');btxt.textContent='❄ Freeze reading';svg.appendChild(btxt);
-  var pulse=document.createElementNS(ns,'rect');pulse.setAttribute('x','30');pulse.setAttribute('y','112');pulse.setAttribute('width','160');pulse.setAttribute('height','36');pulse.setAttribute('rx','18');pulse.setAttribute('fill','none');pulse.setAttribute('stroke','#1a73e8');pulse.setAttribute('stroke-width','3');pulse.setAttribute('opacity','0.5');svg.appendChild(pulse);
-  var pa=document.createElementNS(ns,'animate');pa.setAttribute('attributeName','opacity');pa.setAttribute('values','0.5;0;0.5');pa.setAttribute('dur','1.5s');pa.setAttribute('repeatCount','indefinite');pulse.appendChild(pa);
-  var t=document.createElementNS(ns,'text');t.setAttribute('x','110');t.setAttribute('y','162');t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5f6368');t.setAttribute('font-size','11');t.setAttribute('font-family','Google Sans, sans-serif');t.textContent='Save readings, export CSV';svg.appendChild(t);
+  var t3=document.createElementNS(ns,'text');t3.setAttribute('x','110');t3.setAttribute('y','165');t3.setAttribute('text-anchor','middle');t3.setAttribute('fill','#5f6368');t3.setAttribute('font-size','11');t3.setAttribute('font-family','Google Sans, sans-serif');t3.textContent='Save readings for later';svg.appendChild(t3);
 }
 
 window.addEventListener('load',function(){obRender();});
