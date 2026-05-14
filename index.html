@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>digiClino</title>
+<title>DigiClino</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&family=Roboto+Mono&display=swap');
 
@@ -451,7 +451,7 @@ canvas { border-radius:8px; background: var(--md-sys-color-surface-container); m
 <div id="landscape-block">
   <div class="rotate-icon">📱</div>
   <h2>Please rotate your phone</h2>
-  <p>digiClino works in portrait mode only. Rotate your device to continue measuring.</p>
+  <p>DigiClino works in portrait mode only. Rotate your device to continue measuring.</p>
 </div>
 
 <!-- ONBOARDING -->
@@ -477,7 +477,7 @@ canvas { border-radius:8px; background: var(--md-sys-color-surface-container); m
   <div class="app-bar-leading">
     <div class="app-icon">🧭</div>
     <div>
-      <div class="app-title">digiClino</div>
+      <div class="app-title">DigiClino</div>
       <div class="app-subtitle">DIP · STRIKE · DIRECTION</div>
     </div>
   </div>
@@ -576,7 +576,6 @@ canvas { border-radius:8px; background: var(--md-sys-color-surface-container); m
   <div class="log-card">
     <div class="log-header">
       <div class="log-header-label">Saved readings</div>
-      <button id="bCSV" onclick="exportCSV()">↓ Export CSV</button>
     </div>
     <ul id="log"><li class="log-empty">Freeze a reading to save it here.</li></ul>
   </div>
@@ -607,8 +606,8 @@ canvas { border-radius:8px; background: var(--md-sys-color-surface-container); m
 
 <!-- LOGO FOOTER -->
 <div class="logo-footer">
-  <img src="digiClino_logo.png" alt="digiClino logo" onerror="this.style.display='none'">
-  <div class="logo-footer-name">digiClino</div>
+  <img src="digiClino_logo.png" alt="DigiClino logo" onerror="this.style.display='none'">
+  <div class="logo-footer-name">DigiClino</div>
   <div class="logo-footer-ver">v1.0 · Geo Clinometer App</div>
 </div>
 
@@ -658,8 +657,8 @@ function showTutorial(){
 var frozen=false, logArr=[];
 var E={alpha:0,beta:0,gamma:0,heading:0,hasOri:false,hasHeading:false,ax:0,ay:0,az:0,hasAccel:false,src:''};
 var SM={gx:0,gy:0,gz:-1,sinH:0,cosH:1};
-var A_G=0.18,A_H=0.05,A_H_STILL=0.008;
-var prev={b:0,g:0},isMoving=false,stillCnt=0,STILL_N=12;
+var A_G=0.22,A_H=0.08,A_H_STILL=0.012;
+var prev={b:0,g:0},isMoving=false,stillCnt=0,STILL_N=10;
 var dipHist=[],HIST_N=20;
 var DB_DIR=2,DB_DIP=1;
 var locked={dd:-1,da:-1,st:-1},last={dd:-1,da:-1,st:-1};
@@ -724,7 +723,7 @@ function startSensors(){
     lastRawHeading=h;
     pushBuf(gBufX,gx_dev,GBUF_SIZE);pushBuf(gBufY,gy_dev,GBUF_SIZE);pushBuf(gBufZ,gz_dev,GBUF_SIZE);
     var mgx=gBufX.length>=3?median(gBufX):gx_dev,mgy=gBufY.length>=3?median(gBufY):gy_dev,mgz=gBufZ.length>=3?median(gBufZ):gz_dev;
-    var aG=isMoving?A_G:0.04;
+    var aG=isMoving?A_G:0.06;
     SM.gx=aG*mgx+(1-aG)*SM.gx;SM.gy=aG*mgy+(1-aG)*SM.gy;SM.gz=aG*mgz+(1-aG)*SM.gz;
     var hR=d2r(hAccepted);
     pushBuf(hBufSin,Math.sin(hR),HBUF_SIZE);pushBuf(hBufCos,Math.cos(hR),HBUF_SIZE);
@@ -883,15 +882,6 @@ function renderLog(){
   });
 }
 function clearLog(){logArr=[];renderLog();}
-function exportCSV(){
-  if(!logArr.length){alert('No readings saved yet.');return;}
-  var csv='No,DipDirection_deg,DipAmount_deg,Strike_RHR_deg,Time\n';
-  logArr.forEach(function(r,i){csv+=(logArr.length-i)+','+r.dir+','+r.dip+','+r.str+','+r.time+'\n';});
-  var a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='digiClino_readings_'+new Date().toISOString().slice(0,10)+'.csv';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-}
 
 function setStatus(m,c){
   var e=document.getElementById('status');
@@ -940,10 +930,11 @@ function updateQuadrant(dd,da,st){
 // ── ONBOARDING ──
 var obIdx=0;
 var OB_SLIDES=[
-  {step:'Step 1 of 4',head:'Calibrate first',desc:'Before measuring, move the phone in a figure-8 pattern to calibrate your compass. This eliminates magnetic interference.',hint:'⚠ Always calibrate when you open the app or move to a new location.',draw:obDrawFig8},
-  {step:'Step 2 of 4',head:'Place on rock surface',desc:'Place the back of the phone flat against the rock plane you want to measure. Works in portrait or landscape.',hint:'📱 Hold portrait — the app locks to portrait mode.',draw:obDrawPlacement},
-  {step:'Step 3 of 4',head:'Wait for stable reading',desc:'Hold still and watch the stability bar fill green. The reading locks automatically when stable.',hint:'✓ Green cards mean the reading is reliable.',draw:obDrawStable},
-  {step:'Step 4 of 4',head:'Freeze & save',desc:'Tap Freeze to capture and save the reading. Use Export CSV to share your measurements.',hint:'💡 Stay away from metal objects and power lines for best accuracy.',draw:obDrawFreeze}
+  {step:'Step 1 of 5',head:'Calibrate first',desc:'Before measuring, move the phone in a figure-8 pattern to calibrate your compass. This eliminates magnetic interference.',hint:'⚠ Always calibrate when you open the app or move to a new location.',draw:obDrawFig8},
+  {step:'Step 2 of 5',head:'Place on rock surface',desc:'Place the back of the phone flat against the rock plane you want to measure. Works in portrait or landscape.',hint:'📱 Hold portrait — the app locks to portrait mode.',draw:obDrawPlacement},
+  {step:'Step 3 of 5',head:'Wait for stable reading',desc:'Hold still and watch the stability bar fill green. The reading locks automatically when stable.',hint:'✓ Green cards mean the reading is reliable.',draw:obDrawStable},
+  {step:'Step 4 of 5',head:'Tap anywhere to freeze',desc:'Simply tap anywhere on the screen to freeze the reading. Tap again to unfreeze and continue measuring.',hint:'👆 You can also use the Freeze button below the diagram.',draw:obDrawTapFreeze},
+  {step:'Step 5 of 5',head:'Readings auto-save',desc:'Frozen readings are automatically saved to your log. Use the Clear log button to remove all saved readings.',hint:'💡 Stay away from metal objects and power lines for best accuracy.',draw:obDrawFreeze}
 ];
 function obRender(){
   var s=OB_SLIDES[obIdx];
@@ -957,7 +948,12 @@ function obRender(){
   var svg=document.getElementById('obSvg');svg.innerHTML='';s.draw(svg);
 }
 function obNext(){if(obIdx<OB_SLIDES.length-1){obIdx++;obRender();}else obClose();}
-function obClose(){var el=document.getElementById('onboard');el.classList.add('hidden');setTimeout(function(){el.style.display='none';},300);}
+function obClose(){
+  localStorage.setItem('digiClino_onboarding_seen', 'true');
+  var el=document.getElementById('onboard');
+  el.classList.add('hidden');
+  setTimeout(function(){el.style.display='none';},300);
+}
 
 function obDrawFig8(svg){
   var ns='http://www.w3.org/2000/svg';
@@ -989,6 +985,24 @@ function obDrawStable(svg){
   var anim=document.createElementNS(ns,'animate');anim.setAttribute('attributeName','width');anim.setAttribute('values','20;90;140;180;180');anim.setAttribute('dur','2.5s');anim.setAttribute('repeatCount','indefinite');fill.appendChild(anim);
   var t=document.createElementNS(ns,'text');t.setAttribute('x','110');t.setAttribute('y','150');t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5f6368');t.setAttribute('font-size','11');t.setAttribute('font-family','Google Sans, sans-serif');t.textContent='Hold still until bar turns green';svg.appendChild(t);
 }
+function obDrawTapFreeze(svg){
+  var ns='http://www.w3.org/2000/svg';
+  // Screen outline
+  var screen=document.createElementNS(ns,'rect');screen.setAttribute('x','40');screen.setAttribute('y','20');screen.setAttribute('width','140');screen.setAttribute('height','100');screen.setAttribute('rx','8');screen.setAttribute('fill','#f8f9fa');screen.setAttribute('stroke','#dadce0');screen.setAttribute('stroke-width','2');svg.appendChild(screen);
+  // Cards inside
+  var cards=[[50,30,38,28],[92,30,38,28],[134,30,38,28]];
+  cards.forEach(function(c){
+    var card=document.createElementNS(ns,'rect');card.setAttribute('x',c[0]);card.setAttribute('y',c[1]);card.setAttribute('width',c[2]);card.setAttribute('height',c[3]);card.setAttribute('rx','4');card.setAttribute('fill','#e8f0fe');card.setAttribute('stroke','#8ab4f8');card.setAttribute('stroke-width','1');svg.appendChild(card);
+  });
+  // Tap gesture - hand/finger
+  var hand=document.createElementNS(ns,'text');hand.setAttribute('x','110');hand.setAttribute('y','90');hand.setAttribute('text-anchor','middle');hand.setAttribute('font-size','32');hand.textContent='👆';svg.appendChild(hand);
+  var handAnim=document.createElementNS(ns,'animate');handAnim.setAttribute('attributeName','y');handAnim.setAttribute('values','90;80;90');handAnim.setAttribute('dur','1s');handAnim.setAttribute('repeatCount','indefinite');hand.appendChild(handAnim);
+  // Ripple effect
+  var ripple=document.createElementNS(ns,'circle');ripple.setAttribute('cx','110');ripple.setAttribute('cy','70');ripple.setAttribute('r','5');ripple.setAttribute('fill','none');ripple.setAttribute('stroke','#1a73e8');ripple.setAttribute('stroke-width','2');ripple.setAttribute('opacity','0');svg.appendChild(ripple);
+  var rAnim1=document.createElementNS(ns,'animate');rAnim1.setAttribute('attributeName','r');rAnim1.setAttribute('values','5;30');rAnim1.setAttribute('dur','1s');rAnim1.setAttribute('repeatCount','indefinite');ripple.appendChild(rAnim1);
+  var rAnim2=document.createElementNS(ns,'animate');rAnim2.setAttribute('attributeName','opacity');rAnim2.setAttribute('values','0.8;0');rAnim2.setAttribute('dur','1s');rAnim2.setAttribute('repeatCount','indefinite');ripple.appendChild(rAnim2);
+  var t=document.createElementNS(ns,'text');t.setAttribute('x','110');t.setAttribute('y','148');t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5f6368');t.setAttribute('font-size','11');t.setAttribute('font-family','Google Sans, sans-serif');t.textContent='Tap anywhere on screen';svg.appendChild(t);
+}
 function obDrawFreeze(svg){
   var ns='http://www.w3.org/2000/svg';
   [[30,18,160,24],[30,48,160,24],[30,78,140,24]].forEach(function(r,i){
@@ -996,13 +1010,34 @@ function obDrawFreeze(svg){
     var t=document.createElementNS(ns,'text');t.setAttribute('x','42');t.setAttribute('y',r[1]+16);t.setAttribute('fill','#5f6368');t.setAttribute('font-size','9');t.setAttribute('font-family','Roboto Mono, monospace');t.textContent='#'+(3-i)+' Dir:145° Dip:32° S:055°';svg.appendChild(t);
   });
   var btn=document.createElementNS(ns,'rect');btn.setAttribute('x','30');btn.setAttribute('y','112');btn.setAttribute('width','160');btn.setAttribute('height','36');btn.setAttribute('rx','18');btn.setAttribute('fill','#1a73e8');svg.appendChild(btn);
-  var btxt=document.createElementNS(ns,'text');btxt.setAttribute('x','110');btxt.setAttribute('y','135');btxt.setAttribute('text-anchor','middle');btxt.setAttribute('fill','#fff');btxt.setAttribute('font-size','13');btxt.setAttribute('font-weight','500');btxt.setAttribute('font-family','Google Sans, sans-serif');btxt.textContent='❄ Freeze reading';svg.appendChild(btxt);
+  var btxt=document.createElementNS(ns,'text');btxt.setAttribute('x','110');btxt.setAttribute('y','135');btxt.setAttribute('text-anchor','middle');btxt.setAttribute('fill','#fff');btxt.setAttribute('font-size','13');btxt.setAttribute('font-weight','500');btxt.setAttribute('font-family','Google Sans, sans-serif');btxt.textContent='👆 Tap card to freeze';svg.appendChild(btxt);
   var pulse=document.createElementNS(ns,'rect');pulse.setAttribute('x','30');pulse.setAttribute('y','112');pulse.setAttribute('width','160');pulse.setAttribute('height','36');pulse.setAttribute('rx','18');pulse.setAttribute('fill','none');pulse.setAttribute('stroke','#1a73e8');pulse.setAttribute('stroke-width','3');pulse.setAttribute('opacity','0.5');svg.appendChild(pulse);
   var pa=document.createElementNS(ns,'animate');pa.setAttribute('attributeName','opacity');pa.setAttribute('values','0.5;0;0.5');pa.setAttribute('dur','1.5s');pa.setAttribute('repeatCount','indefinite');pulse.appendChild(pa);
-  var t=document.createElementNS(ns,'text');t.setAttribute('x','110');t.setAttribute('y','162');t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5f6368');t.setAttribute('font-size','11');t.setAttribute('font-family','Google Sans, sans-serif');t.textContent='Save readings, export CSV';svg.appendChild(t);
+  var t=document.createElementNS(ns,'text');t.setAttribute('x','110');t.setAttribute('y','162');t.setAttribute('text-anchor','middle');t.setAttribute('fill','#5f6368');t.setAttribute('font-size','11');t.setAttribute('font-family','Google Sans, sans-serif');t.textContent='Tap again to unfreeze';svg.appendChild(t);
 }
 
-window.addEventListener('load',function(){obRender();});
+window.addEventListener('load',function(){
+  // Show onboarding only on first visit
+  var hasSeenOnboarding = localStorage.getItem('digiClino_onboarding_seen');
+  if (!hasSeenOnboarding) {
+    obRender();
+  } else {
+    document.getElementById('onboard').style.display = 'none';
+  }
+  
+  // Add tap-to-freeze functionality on main container
+  var mainContainer = document.querySelector('.main');
+  mainContainer.addEventListener('click', function(e) {
+    // Don't trigger if clicking on buttons or interactive elements
+    var target = e.target;
+    var isButton = target.tagName === 'BUTTON' || target.closest('button');
+    var isToggle = target.id === 'rawToggle' || target.closest('#rawToggle');
+    
+    if (!isButton && !isToggle) {
+      toggleFreeze();
+    }
+  });
+});
 </script>
 </body>
 </html>
